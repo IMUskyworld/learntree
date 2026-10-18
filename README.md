@@ -13,6 +13,8 @@ learntree 的模型很直接：
 - 叶子节点 = 可以直接动手解决的最小问题；
 - **进度按叶子算**：解决一个叶子，树上的进度才真的亮一块。
 
+![learntree 主界面：一棵「学会 RAG」问题树、按叶子算的进度与大纲](assets/screenshot.png)
+
 | | |
 | --- | --- |
 | 纯静态 | 手写 HTML/CSS/ES Module，零构建、零依赖、零打包。`python -m http.server` 就能跑 |
