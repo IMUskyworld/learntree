@@ -1,5 +1,7 @@
 # learntree（树状图 AI 学习平台）
 
+[![ci](https://github.com/IMUskyworld/learntree/actions/workflows/ci.yml/badge.svg)](https://github.com/IMUskyworld/learntree/actions/workflows/ci.yml)
+
 **把学习过程中冒出来的问题画成一棵树，AI 只负责一件事：帮你把它拆开。**
 
 学一个陌生领域时，困难不是一条直线，而是一棵树：「学会 RAG」→「检索」→「怎么评估检索质量」→
@@ -88,7 +90,7 @@ python scripts/llm_proxy.py --port 8932 --upstream https://api.example.com/v1
 - 存储键：`learntree.library.v1`（localStorage）。读坏了**不会覆盖**原内容，只会按空库打开并告诉你发生了什么。
 - 导出文件自描述：`{app:"learntree", schemaVersion:1, exportedAt, treeCount, library}`。缺任何一项直接拒收，不猜格式。
 - 导出默认剥掉 `apiKey`；只有你显式勾选带密钥时才会写进去，界面也会警告。
-- 全仓零外部资源引用：没有 CDN、没有网络字体、没有埋点。这条由 `verify_mvp.py` 的静态检查强制。
+- 应用零外部资源引用：没有 CDN、没有网络字体、没有埋点。这条由 `verify_mvp.py` 的静态检查强制（README 顶部的 CI 徽章由 GitHub 自己托管）。
 - 发给模型的只有：学习目标、从根到当前节点的路径标题、当前节点标题/备注、已有子节点标题。不发整棵树。
 
 ## 已知局限

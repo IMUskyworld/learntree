@@ -558,7 +558,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1
 | 真 LLM 的拆解质量 | 用户填 key | 2026-10-18 已用 DeepSeek 抽测一轮（§24.7）；样本小，其它厂商/模型仍未验证 |
 | 首屏性能与 Lighthouse | 谁在意谁跑 | MVP 不引入工具链，见 §24.4 |
 | 公网部署（Qoder Sites / 任意静态托管） | 用户点头 | 纯静态，`index.html` + `app/` 直接可发 |
-| git init + 首次提交 | 用户点头 | 本仓库 2026-10-18 已完成（`main`，首个提交 `515ecc4`）；其余四个项目待用户点头 |
+| git init + 首次提交 + 推送 GitHub | 用户点头 | 本仓库 2026-10-18 已完成：公开仓库 `IMUskyworld/learntree`，CI 首跑 6/6 全绿（§25）；其余四个项目待用户点头 |
 | 非 Chromium 内核（Firefox/Safari）实测 | 有机器的人 | 本机只有 Edge/Chrome；SVG 与 ES Module 都是标准用法 |
 
 ### 24.5 已知的产品局限（诚实清单）
@@ -618,3 +618,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1
 | 2026-10-18 | 真模型（DeepSeek）实测：直连/代理/浏览器三级通过；修复 `llm_proxy.py` 上游带 `/v1` 时拼成 `/v1/v1/...` 导致真 API 404 的 bug，20-6b 增加路径回归断言；回填 §24.7，更新 §24.1/§24.3/§24.5 |
 | 2026-10-18 | `git init`（`main`）+ 首次提交 `515ecc4`（30 文件 / 7544 行）；作者身份写在仓库局部配置，未动全局 |
 | 2026-10-18 | 发布前 CI 预检：`node --test tests/*.test.js` 在 Windows + Node 20 下不成立（shell 不展开通配符、Node 20 不认 glob 字面量；Node 24 也已不接受目录参数）→ 全仓测试命令统一为无参数 `node --test`（CI / check.ps1 / package.json / README / 命令速查）；CI 矩阵补入 Node 24 |
+| 2026-10-18 | README 加主界面截图（`assets/screenshot.png`：浅色主题、全树概览、选中「文档入库」、进度 10/36） |
+| 2026-10-18 | 推送 GitHub：公开仓库 `IMUskyworld/learntree`；CI 首跑 6/6 全绿（windows/ubuntu × node 20/22/24）；README 加 CI 徽章 |
