@@ -83,8 +83,8 @@ AI 在 MVP 里只做一件事：**把一个节点拆成 3–6 个子问题**（`
    必须在加载时检测 `location.protocol === "file:"` 并给出可读的提示页 + 一行启动命令**，
    而不是白屏。这是 §20 的验收项之一。
 
-`package.json` 只有一个字段 `{"type":"module"}`（让 `node --test` 认 ES Module），
-没有任何依赖，因此没有 `npm install` 步骤。
+`package.json` 里没有任何依赖（`"type": "module"` 让 `node --test` 按 ES Module 加载），
+因此没有 `npm install` 步骤，也没有锁文件。
 
 ---
 
@@ -299,7 +299,7 @@ learntree/
 | 状态 | 普通对象 + `render()` 全量重绘 | 树规模小（§16 目标 500 节点），全量重绘够用且没有一致性 bug |
 | 存储 | localStorage | 本地优先；导出兜底 |
 | AI | fetch + OpenAI 兼容协议 | 不绑厂商 |
-| 单测 | `node --test` | Node 22+ 内置，零依赖 |
+| 单测 | `node --test` | Node 20+ 内置，零依赖 |
 | 辅助脚本 | Python 3.11 标准库 | 与另三个项目一致，假服务/代理都无需 pip |
 
 版本约束：现代浏览器（Chrome/Edge 110+、Firefox 115+、Safari 16.4+）。
@@ -356,7 +356,7 @@ learntree/
 
 ## 16. 测试策略
 
-- **core 单测**（`node --test tests/*.test.js`）：tree / render / ai / storage 四组，纯函数，注入 clock/random/fetch/backend。
+- **core 单测**（`node --test`）：tree / render / ai / storage 四组，纯函数，注入 clock/random/fetch/backend。
 - **静态完整性**（verify_mvp）：`index.html` 引用的每个文件存在；无外链资源；无 `import` 未使用路径；CSS 无外部 `url()`。
 - **真实 HTTP 往返**（verify_mvp）：起 `scripts/fake_llm.py`（真 socket），用 Node 的 `fetch`
   直接打它，验证 `callLlm` 的 header/body/解析/CORS 预检——**不是 mock，是本机真请求**。
@@ -398,7 +398,7 @@ learntree/
 python -m http.server 8080           # 然后访问 http://127.0.0.1:8080/
 
 # 测试
-node --test tests/                   # 或 npm test
+node --test                            # 或 npm test
 
 # 假 LLM（验收/试用用）
 python scripts/fake_llm.py --port 8931
@@ -617,3 +617,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1
 | 2026-09-23 | 补 §24.1–§24.6、README、三份 ADR、`docs/protocol.md`、`docs/schemas/learntree-v1.schema.json`、`docs/known-deviations.md` |
 | 2026-10-18 | 真模型（DeepSeek）实测：直连/代理/浏览器三级通过；修复 `llm_proxy.py` 上游带 `/v1` 时拼成 `/v1/v1/...` 导致真 API 404 的 bug，20-6b 增加路径回归断言；回填 §24.7，更新 §24.1/§24.3/§24.5 |
 | 2026-10-18 | `git init`（`main`）+ 首次提交 `515ecc4`（30 文件 / 7544 行）；作者身份写在仓库局部配置，未动全局 |
+| 2026-10-18 | 发布前 CI 预检：`node --test tests/*.test.js` 在 Windows + Node 20 下不成立（shell 不展开通配符、Node 20 不认 glob 字面量；Node 24 也已不接受目录参数）→ 全仓测试命令统一为无参数 `node --test`（CI / check.ps1 / package.json / README / 命令速查）；CI 矩阵补入 Node 24 |

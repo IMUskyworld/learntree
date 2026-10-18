@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest]
-        node: ["20", "22"]
+        node: ["20", "22", "24"]
     steps:
       - uses: actions/checkout@v4
 
@@ -22,8 +22,10 @@ jobs:
           node-version: ${{ matrix.node }}
 
       # 零依赖：没有 npm install 这一步，这是本项目的第一条约束。
+      # 测试命令不带参数、不用 glob：Windows 的 shell 不展开通配符，Node 20 也不认 glob 字面量
+      #（而 Node 24 已不接受目录参数）——无参数 `node --test` 是 20/22/24 唯一全通写法。
       - name: Unit tests (core, no DOM)
-        run: node --test tests/*.test.js
+        run: node --test
 
       - uses: actions/setup-python@v5
         with:

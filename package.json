@@ -6,7 +6,7 @@
   "description": "本地优先的问题树学习平台：零构建、零依赖，AI 只负责拆解问题",
   "license": "MIT",
   "scripts": {
-    "test": "node --test tests/*.test.js",
+    "test": "node --test",
     "start": "python -m http.server 8080"
   },
   "engines": {

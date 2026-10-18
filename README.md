@@ -70,7 +70,7 @@ python scripts/llm_proxy.py --port 8932 --upstream https://api.example.com/v1
 | 命令 | 作用 |
 | --- | --- |
 | `python -m http.server 8080` | 打开应用 |
-| `node --test tests/*.test.js` | 核心层单测（99 个，无需 npm install） |
+| `node --test` | 核心层单测（99 个，无需 npm install，自动发现 tests/） |
 | `python scripts/fake_llm.py --port 8931` | 假 LLM（含 CORS），验收/试用用 |
 | `python scripts/llm_proxy.py --port 8932 --upstream <url>` | 真端点的本地 CORS 代理 |
 | `python scripts/verify_mvp.py` | §20 完成定义逐条核验（真起 HTTP 服务、真发请求） |

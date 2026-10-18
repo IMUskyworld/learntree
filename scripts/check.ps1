@@ -90,7 +90,8 @@ Step "零依赖（不许有 node_modules / package-lock）" {
 }
 
 Step "unit tests (node --test)" {
-    node --test tests/*.test.js
+    # 不要加路径/glob：Windows 的 shell 不展开通配符、Node 20 不认 glob 字面量（见 ci.yml）
+    node --test
 }
 
 if ($SkipAudit) {
