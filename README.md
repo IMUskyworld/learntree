@@ -29,6 +29,8 @@ learntree 的模型很直接：
 
 ## 快速开始
 
+**在线演示**：<https://imuskyworld.github.io/learntree/>（GitHub Pages；不配密钥也能完整体验，数据依然只存在你的浏览器里）
+
 ```powershell
 cd learntree
 python -m http.server 8080       # 然后浏览器打开 http://127.0.0.1:8080/

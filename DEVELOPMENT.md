@@ -557,7 +557,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1
 | --- | --- | --- |
 | 真 LLM 的拆解质量 | 用户填 key | 2026-10-18 已用 DeepSeek 抽测一轮（§24.7）；样本小，其它厂商/模型仍未验证 |
 | 首屏性能与 Lighthouse | 谁在意谁跑 | MVP 不引入工具链，见 §24.4 |
-| 公网部署（Qoder Sites / 任意静态托管） | 用户点头 | 纯静态，`index.html` + `app/` 直接可发 |
+| 公网部署 | 用户点头 | 2026-10-18 已启用 GitHub Pages（main 分支根目录 + `.nojekyll`）：https://imuskyworld.github.io/learntree/ ；Qoder Sites 未使用 |
 | git init + 首次提交 + 推送 GitHub | 用户点头 | 本仓库 2026-10-18 已完成：公开仓库 `IMUskyworld/learntree`，CI 首跑 6/6 全绿（§25）；其余四个项目待用户点头 |
 | 非 Chromium 内核（Firefox/Safari）实测 | 有机器的人 | 本机只有 Edge/Chrome；SVG 与 ES Module 都是标准用法 |
 
@@ -620,3 +620,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1
 | 2026-10-18 | 发布前 CI 预检：`node --test tests/*.test.js` 在 Windows + Node 20 下不成立（shell 不展开通配符、Node 20 不认 glob 字面量；Node 24 也已不接受目录参数）→ 全仓测试命令统一为无参数 `node --test`（CI / check.ps1 / package.json / README / 命令速查）；CI 矩阵补入 Node 24 |
 | 2026-10-18 | README 加主界面截图（`assets/screenshot.png`：浅色主题、全树概览、选中「文档入库」、进度 10/36） |
 | 2026-10-18 | 推送 GitHub：公开仓库 `IMUskyworld/learntree`；CI 首跑 6/6 全绿（windows/ubuntu × node 20/22/24）；README 加 CI 徽章 |
+| 2026-10-18 | 启用 GitHub Pages 在线演示（main 根目录 + `.nojekyll`）：https://imuskyworld.github.io/learntree/ ；README 快速开始加演示入口 |
+| 2026-10-18 | 发布 v0.1.0：附注标签 + GitHub Release（发布说明整理自本节变更记录） |
