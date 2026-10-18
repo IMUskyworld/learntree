@@ -558,7 +558,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1
 | 真 LLM 的拆解质量 | 用户填 key | 2026-10-18 已用 DeepSeek 抽测一轮（§24.7）；样本小，其它厂商/模型仍未验证 |
 | 首屏性能与 Lighthouse | 谁在意谁跑 | MVP 不引入工具链，见 §24.4 |
 | 公网部署（Qoder Sites / 任意静态托管） | 用户点头 | 纯静态，`index.html` + `app/` 直接可发 |
-| git init + 首次提交 | 用户点头 | 五个项目一起 |
+| git init + 首次提交 | 用户点头 | 本仓库 2026-10-18 已完成（`main`，首个提交 `515ecc4`）；其余四个项目待用户点头 |
 | 非 Chromium 内核（Firefox/Safari）实测 | 有机器的人 | 本机只有 Edge/Chrome；SVG 与 ES Module 都是标准用法 |
 
 ### 24.5 已知的产品局限（诚实清单）
@@ -616,3 +616,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1
 | 2026-09-23 | 浏览器端到端实测（§24.6）修掉 5 个单测抓不到的 bug：AI 预览弹窗 Promise 断链、`[hidden]` 被 `display:grid` 覆盖、导出文件名用了 UTC 日、节点文字溢出节点盒、`callLlm` 忽略设置里的 `timeoutMs` |
 | 2026-09-23 | 补 §24.1–§24.6、README、三份 ADR、`docs/protocol.md`、`docs/schemas/learntree-v1.schema.json`、`docs/known-deviations.md` |
 | 2026-10-18 | 真模型（DeepSeek）实测：直连/代理/浏览器三级通过；修复 `llm_proxy.py` 上游带 `/v1` 时拼成 `/v1/v1/...` 导致真 API 404 的 bug，20-6b 增加路径回归断言；回填 §24.7，更新 §24.1/§24.3/§24.5 |
+| 2026-10-18 | `git init`（`main`）+ 首次提交 `515ecc4`（30 文件 / 7544 行）；作者身份写在仓库局部配置，未动全局 |
