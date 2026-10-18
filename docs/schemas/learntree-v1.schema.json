@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learntree.local/schemas/learntree-v1.schema.json",
+  "title": "learntree export v1",
+  "description": "learntree 导出文件的机器可读定义。运行时校验由 app/core/tree.js + app/core/storage.js 实现（不引入 JSON Schema 校验库），本文件用于文档与外部工具对接。",
+  "type": "object",
+  "required": ["app", "schemaVersion", "exportedAt", "library"],
+  "additionalProperties": true,
+  "properties": {
+    "app": { "const": "learntree" },
+    "schemaVersion": { "const": 1 },
+    "exportedAt": { "type": "string", "format": "date-time" },
+    "treeCount": { "type": "integer", "minimum": 0 },
+    "library": { "$ref": "#/definitions/Library" }
+  },
+  "definitions": {
+    "Library": {
+      "type": "object",
+      "required": ["schemaVersion", "trees"],
+      "additionalProperties": true,
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "trees": { "type": "array", "items": { "$ref": "#/definitions/Tree" } },
+        "activeTreeId": { "type": ["string", "null"] },
+        "settings": {
+          "type": "object",
+          "properties": {
+            "llm": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "baseUrl": { "type": "string" },
+                "model": { "type": "string" },
+                "apiKey": { "type": "string", "description": "仅存在于浏览器 localStorage；默认导出会被剥掉" },
+                "timeoutMs": { "type": "number", "exclusiveMinimum": 0 }
+              }
+            },
+            "ui": {
+              "type": "object",
+              "properties": { "showAiBadge": { "type": "boolean" } }
+            }
+          }
+        },
+        "createdAt": { "type": ["string", "null"] }
+      }
+    },
+    "Tree": {
+      "type": "object",
+      "required": ["schemaVersion", "id", "title", "root"],
+      "additionalProperties": true,
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "id": { "type": "string", "pattern": "^t_[a-z0-9]{6}$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "collapsed": { "type": "array", "items": { "type": "string" } },
+        "root": { "$ref": "#/definitions/Node" }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "required": ["id", "title", "status", "children"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^n_[a-z0-9]{6}$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "note": { "type": "string" },
+        "status": { "enum": ["todo", "doing", "done"] },
+        "source": { "enum": ["user", "ai"] },
+        "hint": { "type": "string" },
+        "children": { "type": "array", "items": { "$ref": "#/definitions/Node" } }
+      }
+    }
+  }
+}

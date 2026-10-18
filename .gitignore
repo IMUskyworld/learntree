@@ -1,0 +1,19 @@
+# python 辅助脚本
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 验收与运行产物
+.verify-tmp/
+*.log
+__pycache__/
+
+# 浏览器下载落盘的导出件
+learntree-export-*.json
+
+# editors / os
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini

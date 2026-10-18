@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>learntree · 问题树学习平台</title>
+    <meta name="color-scheme" content="light dark" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f6f4f'/%3E%3Cpath d='M16 6v20M16 12h8M16 19h-7' stroke='%23eaf3ec' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='25' cy='12' r='2.6' fill='%23eaf3ec'/%3E%3Ccircle cx='8' cy='19' r='2.6' fill='%23eaf3ec'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="app/styles.css" />
+  </head>
+  <body>
+    <!-- 直接双击 index.html（file://）时，ES Module 会被浏览器按 CORS 规则拒绝加载。
+         这里给出可读提示而不是一片空白：见 DEVELOPMENT.md §4 / §20-8。 -->
+    <section id="file-notice" class="file-notice" hidden>
+      <h1>learntree 需要用一个本地 HTTP 服务打开</h1>
+      <p>
+        你现在是双击 <code>index.html</code> 打开的（<code>file://</code>）。
+        浏览器不允许在 <code>file://</code> 页面里加载 ES Module，所以界面无法启动。
+        这不是数据出错，换一种打开方式就好。
+      </p>
+      <p>在项目目录下执行下面任意一条，然后访问 <code>http://127.0.0.1:8080/</code>：</p>
+      <pre><code>python -m http.server 8080
+# 或
+npx serve .</code></pre>
+      <p class="hint">
+        数据存在这个浏览器的 localStorage 里；换打开方式不会丢，但换浏览器需要先用「导出 / 导入」。
+      </p>
+    </section>
+
+    <div id="app" class="app" hidden>
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-name">learntree</span>
+          <span class="brand-sub">问题树 · AI 拆解</span>
+        </div>
+
+        <div class="tree-picker">
+          <label class="sr-only" for="tree-select">当前问题树</label>
+          <select id="tree-select" class="select"></select>
+          <button id="btn-tree-new" class="btn" type="button" title="新建一棵问题树">新建</button>
+          <button id="btn-tree-rename" class="btn" type="button" title="重命名当前树">重命名</button>
+          <button id="btn-tree-delete" class="btn btn-danger" type="button" title="删除当前树">删除</button>
+        </div>
+
+        <div class="topbar-spacer"></div>
+
+        <div class="topbar-tools">
+          <input
+            id="search"
+            class="search"
+            type="search"
+            placeholder="搜索节点标题（/）"
+            aria-label="搜索节点标题"
+            autocomplete="off"
+          />
+          <button id="btn-sample" class="btn btn-ghost" type="button" title="载入内置示例树">示例树</button>
+          <button id="btn-export" class="btn btn-ghost" type="button" title="导出为 JSON 文件">导出</button>
+          <button id="btn-import" class="btn btn-ghost" type="button" title="从 JSON 文件导入">导入</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden />
+          <button id="btn-settings" class="btn btn-ghost" type="button" title="设置">设置</button>
+          <span id="ai-indicator" class="pill pill-off" title="AI 状态">AI 未启用</span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="canvas-pane" aria-label="问题树视图">
+          <div class="canvas-head">
+            <h1 id="tree-title" class="tree-title"></h1>
+            <div class="legend" id="legend">
+              <span class="lg lg-todo">未开始</span>
+              <span class="lg lg-doing">进行中</span>
+              <span class="lg lg-done">已完成</span>
+              <span class="lg lg-ai">AI 生成</span>
+            </div>
+          </div>
+          <div id="canvas" class="canvas"></div>
+          <div id="empty-state" class="empty-state" hidden>
+            <p>还没有问题树。</p>
+            <div class="empty-actions">
+              <button id="btn-empty-new" class="btn btn-primary" type="button">新建问题树</button>
+              <button id="btn-empty-sample" class="btn" type="button">载入示例树</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side-pane" aria-label="大纲与进度">
+          <div class="progress-block">
+            <div class="progress-row">
+              <span id="progress-text" class="progress-text">0 / 0 个叶子问题已完成</span>
+              <span id="progress-ratio" class="progress-ratio">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-label="整体进度">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <p id="consistency-note" class="consistency-note" hidden></p>
+          </div>
+          <nav id="outline" class="outline" aria-label="树形大纲"></nav>
+        </aside>
+      </main>
+
+      <footer class="statusbar">
+        <div id="node-actions" class="node-actions">
+          <span class="muted">选中一个节点后可操作</span>
+        </div>
+        <div id="status-msg" class="status-msg" role="status" aria-live="polite"></div>
+      </footer>
+
+      <div id="modal-root" class="modal-root" hidden></div>
+      <div id="toast-root" class="toast-root" aria-live="polite"></div>
+    </div>
+
+    <!-- 引导脚本必须是 classic script：file:// 下 module 根本不会执行。 -->
+    <script>
+      (function () {
+        var isFile = location.protocol === "file:";
+        var notice = document.getElementById("file-notice");
+        var app = document.getElementById("app");
+        if (isFile) {
+          notice.hidden = false;
+          app.hidden = true;
+          return;
+        }
+        app.hidden = false;
+        var s = document.createElement("script");
+        s.type = "module";
+        s.src = "app/ui/app.js";
+        document.head.appendChild(s);
+      })();
+    </script>
+  </body>
+</html>

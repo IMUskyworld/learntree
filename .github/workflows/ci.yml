@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    name: ${{ matrix.os }} / node${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        node: ["20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 零依赖：没有 npm install 这一步，这是本项目的第一条约束。
+      - name: Unit tests (core, no DOM)
+        run: node --test tests/*.test.js
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: MVP audit (§20)
+        run: python scripts/verify_mvp.py
